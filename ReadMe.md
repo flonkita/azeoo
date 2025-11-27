@@ -3,6 +3,13 @@
 Ce dépôt contient la réalisation du test technique pour l'alternance Flutter chez Azeoo.
 Le projet est divisé en deux parties principales : un module Flutter (SDK) et une application hôte React Native.
 
+## 📂 Structure du Projet
+```text
+/C:/Azeoo/
+  ├── flutter_profile_sdk/   # Le module Flutter (Gestion du profil)
+  └── react_native_app/      # L'application Hôte React Native (Intégration)
+```
+
 ## 📋 Prérequis
 
 Avant de lancer le projet, assurez-vous d'avoir installé et configuré les outils suivants sur votre machine.
@@ -36,10 +43,6 @@ Avant de lancer le projet, assurez-vous d'avoir installé et configuré les outi
 
 ---
 
-## Structure du Projet
-- `flutter_profile_sdk/` : Contient le SDK Flutter qui gère la récupération et l'affichage des profils utilisateurs.
-- `react_native_app/` : Contient l'application React Native qui intègre le SDK Flutter.
-
 ## Fonctionnalités du SDK Flutter
 L'objectif était de créer un module capable de récupérer et d'afficher un profil utilisateur via l'API Azeoo.
 
@@ -71,19 +74,8 @@ Pour tester le module Flutter indépendamment de React Native :
     ```
     *Note : L'ID utilisateur est temporairement fixé à "1" dans le `main.dart` pour les besoins du test autonome.*
 
-## 🐛 Problèmes rencontrés et Solutions
 
-### 1. Erreur de stockage sur l'émulateur Android
-**Problème :** Lors du lancement du module Flutter (`flutter run`), échec de l'installation avec l'erreur :
-`[INSTALL_FAILED_INSUFFICIENT_STORAGE: Failed to override installation location]`
-
-**Cause :** L'espace disque alloué par défaut à l'émulateur Android était saturé par les installations précédentes ou les fichiers temporaires.
-
-**Solution :**
-* Arrêt de l'émulateur.
-* Utilisation de la fonction **"Wipe Data"** dans le *Device Manager* d'Android Studio pour réinitialiser l'émulateur à son état d'usine.
-* Relance de l'installation.
-    ---
+---
 
 ## 📱 Partie 2 : L'Application Hôte React Native (`react_native_app`)
 
@@ -119,5 +111,41 @@ Cette application sert de conteneur ("Host") pour le test. Elle gère la navigat
     npm run android
     ```
 
+5.  Lancer sur iOS (dans un autre terminal) :
+    ```bash
+    npm run ios
+    ```
+
 ---
 *(À suivre : Intégration Native & Communication React Native <-> Flutter)*
+
+## 🐛 Problèmes rencontrés et Solutions (Troubleshooting)
+
+### 1. Erreur de stockage sur l'émulateur Android
+**Problème :** Erreur `[INSTALL_FAILED_INSUFFICIENT_STORAGE...]`.
+**Solution :** Utilisation de la fonction "Wipe Data" dans le *Device Manager* d'Android Studio.
+
+### 2. Erreur Gradle "Could not move temporary workspace" (Windows)
+**Problème :** Erreur `java.io.UncheckedIOException...`.
+**Solution :** Suppression manuelle du dossier caché `.gradle` et redémarrage pour libérer les fichiers verrouillés.
+
+### 3. Erreur NDK "Missing source.properties"
+**Problème :** Erreur `[CXX1101] NDK at ... did not have a source.properties file`.
+**Solution :** Réinstallation manuelle de la version spécifique du NDK (26.1.10909125) via Android Studio.
+
+### 4. Conflit de version Kotlin (Insets != EdgeInsets)
+**Problème :** Erreur de compilation dans `react-native-screens`.
+**Solution :** Forçage de la version `react-native-screens: ^3.35.0` et nettoyage complet (`npm install` propre).
+
+### 5. Problème de réseau Gradle (Hôte inconnu)
+**Problème :** Gradle n'arrive pas à télécharger les dépendances (`Hôte inconnu repo.maven.apache.org`).
+**Solution :** Flush du DNS Windows via `ipconfig /flushdns`.
+**Problème :** Lors du lancement du module Flutter (`flutter run`), échec de l'installation avec l'erreur :
+`[INSTALL_FAILED_INSUFFICIENT_STORAGE: Failed to override installation location]`
+
+**Cause :** L'espace disque alloué par défaut à l'émulateur Android était saturé par les installations précédentes ou les fichiers temporaires.
+
+**Solution :**
+* Arrêt de l'émulateur.
+* Utilisation de la fonction **"Wipe Data"** dans le *Device Manager* d'Android Studio pour réinitialiser l'émulateur à son état d'usine.
+* Relance de l'installation.
