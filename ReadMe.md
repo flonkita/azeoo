@@ -84,4 +84,40 @@ Pour tester le module Flutter indépendamment de React Native :
 * Utilisation de la fonction **"Wipe Data"** dans le *Device Manager* d'Android Studio pour réinitialiser l'émulateur à son état d'usine.
 * Relance de l'installation.
     ---
-*(À suivre : Intégration React Native...)*
+
+## 📱 Partie 2 : L'Application Hôte React Native (`react_native_app`)
+
+Cette application sert de conteneur ("Host") pour le test. Elle gère la navigation principale et la persistance des données avant d'invoquer le module Flutter.
+
+### 🛠 Choix Techniques
+
+* **React Navigation v6 :**
+    * Utilisation de `BottomTabNavigator` pour répondre à la contrainte des deux onglets (Entrée ID / Affichage Profil).
+    * Standard de facto pour la navigation en React Native.
+* **AsyncStorage :**
+    * Utilisé pour persister l'`userId` localement.
+    * Permet de conserver l'ID même si l'application est redémarrée (bonus UX) et de le partager entre les écrans.
+* **TypeScript :**
+    * Le projet est initialisé en TypeScript pour garantir le typage et éviter les erreurs courantes lors de l'interfaçage avec les modules natifs.
+
+### ⚙️ Installation et Lancement
+
+1.  Se placer dans le dossier de l'application :
+    ```bash
+    cd react_native_app
+    ```
+2.  Installer les dépendances JavaScript :
+    ```bash
+    npm install ou npi i
+    ```
+3.  Lancer le serveur de développement (Metro Bundler) :
+    ```bash
+    npm start
+    ```
+4.  Lancer sur Android (dans un autre terminal) :
+    ```bash
+    npm run android
+    ```
+
+---
+*(À suivre : Intégration Native & Communication React Native <-> Flutter)*
