@@ -3,6 +3,39 @@
 Ce dépôt contient la réalisation du test technique pour l'alternance Flutter chez Azeoo.
 Le projet est divisé en deux parties principales : un module Flutter (SDK) et une application hôte React Native.
 
+## 📋 Prérequis
+
+Avant de lancer le projet, assurez-vous d'avoir installé et configuré les outils suivants sur votre machine.
+
+### Environnement Général
+* **Git** : Pour cloner le projet.
+* **Node.js** (Version LTS recommandée, v18+) : Nécessaire pour React Native.
+* **JDK (Java Development Kit)** : Version 11 ou 17 (Requis pour la compilation Android).
+
+### Flutter (Module SDK)
+* **Flutter SDK** : Version stable récente (3.x).
+* Vérifiez votre installation avec la commande :
+    ```bash
+    flutter doctor
+    ```
+    *Assurez-vous qu'il n'y a aucune erreur critique concernant Android toolchain.*
+
+### React Native (Application Hôte)
+* **React Native CLI** :
+    ```bash
+    npm install -g react-native-cli
+    ```
+* **Yarn** (Optionnel mais recommandé) : `npm install -g yarn`
+
+### Configuration Mobile (Android)
+* **Android Studio** : Installé avec le SDK Android standard.
+* **Variables d'environnement** :
+    * `ANDROID_HOME` doit pointer vers votre dossier SDK.
+    * `JAVA_HOME` doit pointer vers votre dossier JDK.
+* **Émulateur** : Un appareil virtuel (AVD) configuré via le *Device Manager* d'Android Studio, ou un appareil physique avec le *Débogage USB* activé.
+
+---
+
 ## Structure du Projet
 - `flutter_profile_sdk/` : Contient le SDK Flutter qui gère la récupération et l'affichage des profils utilisateurs.
 - `react_native_app/` : Contient l'application React Native qui intègre le SDK Flutter.
