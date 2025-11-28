@@ -1,6 +1,32 @@
-pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        // Indispensable pour que le script trouve ses dépendances
+        maven { url 'https://storage.googleapis.com/download.flutter.io' }
+    }
+    includeBuild("../node_modules/@react-native/gradle-plugin")
+}
+
 plugins { id("com.facebook.react.settings") }
 extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
+
 rootProject.name = 'rn_host_app'
+
+// =========================================================
+// 🟢 CONFIGURATION FLUTTER (OFFICIELLE & CORRIGÉE)
+// =========================================================
+
+// 1. On définit le chemin
+def flutterProjectDir = new File(settingsDir, '../../flutter_profile_sdk')
+
+// 2. LE FIX : On utilise le nom complet de la classe pour éviter l'erreur
+setBinding(new groovy.lang.Binding([gradle: this]))
+
+// 3. On lance le script officiel (qui va gérer les plugins tout seul !)
+evaluate(new File(flutterProjectDir, '.android/include_flutter.groovy'))
+
+// React Native
 include ':app'
 includeBuild('../node_modules/@react-native/gradle-plugin')
