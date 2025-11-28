@@ -149,3 +149,39 @@ Cette application sert de conteneur ("Host") pour le test. Elle gère la navigat
 * Arrêt de l'émulateur.
 * Utilisation de la fonction **"Wipe Data"** dans le *Device Manager* d'Android Studio pour réinitialiser l'émulateur à son état d'usine.
 * Relance de l'installation.
+## 🔧 Challenges Techniques Surmontés (Intégration Windows/Gradle)
+
+L'intégration d'un module Flutter (Add-to-App) dans un projet React Native 0.76 sous Windows a présenté plusieurs défis complexes liés à l'écosystème Gradle et au verrouillage de fichiers. Voici les solutions techniques mises en place :
+
+### 1. Conflit de Cycle de Vie Gradle (`afterEvaluate`)
+* **Symptôme :** Erreur `Cannot run Project.afterEvaluate(Action) when the project is already evaluated`.
+* **Cause :** Les optimisations de React Native 0.76 ("Configure on Demand") verrouillent le projet avant que le plugin Flutter n'ait pu s'initialiser.
+* **Solution :** Désactivation explicite des caches et du parallélisme dans `gradle.properties` :
+    ```properties
+    org.gradle.configureondemand=false
+    org.gradle.configuration-cache=false
+    org.gradle.parallel=false
+    ```
+
+### 2. Incompatibilité de Script Groovy (`Binding`)
+* **Symptôme :** Erreur `unable to resolve class Binding` dans `settings.gradle`.
+* **Cause :** Le script d'intégration automatique de Flutter utilise une syntaxe Groovy implicite que les versions récentes de Gradle ne supportent plus dans ce contexte.
+* **Solution :** Utilisation du nom de classe complet qualifié :
+    ```gradle
+    // Au lieu de setBinding(new Binding(...))
+    setBinding(new groovy.lang.Binding([gradle: this]))
+    ```
+
+### 3. Verrouillage de Fichiers Windows (`UncheckedIOException`)
+* **Symptôme :** Erreur `Could not move temporary workspace` lors du build.
+* **Cause :** Le système de fichiers Windows, couplé à l'antivirus ou à l'indexation, verrouille les dossiers temporaires `.gradle` pendant la compilation.
+* **Solution :**
+    * Exclusion du dossier du projet dans Windows Defender.
+    * Script de nettoyage manuel des processus `OpenJDK` et `GradleDaemon` avant les builds critiques.
+
+### 4. Gestion des Plugins Flutter (`Package not found`)
+* **Symptôme :** Le code Java généré (`GeneratedPluginRegistrant`) ne trouvait pas les modules `sqflite` ou `path_provider`.
+* **Cause :** L'intégration manuelle initiale omettait l'inclusion dynamique des plugins dépendants.
+* **Solution :** Retour à l'utilisation du script officiel `include_flutter.groovy` (une fois patché avec le fix `groovy.lang.Binding`), qui gère automatiquement la résolution des plugins via le fichier `.flutter-plugins-dependencies`.
+
+---
