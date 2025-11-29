@@ -9,11 +9,11 @@ Il démontre l'intégration d'un module Flutter complet (SDK) au sein d'une appl
 
 ## 📹 Démonstration
 
-Une vidéo de démonstration du flux complet (Configuration ID -> Navigation -> Appel Module Natif -> Affichage Flutter) est disponible ci-dessous :
+Une vidéo de démonstration du flux complet (Configuration ID -> Navigation -> Appel Module Natif -> Affichage Flutter) est disponible dans le dossier `assets`.
 
-![Démonstration du Projet](https://github-production-user-asset-6210df.s3.amazonaws.com/120097277/520415191-dfee4cec-3453-42df-9936-e97a9610840c.webm?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20251129%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251129T195510Z&X-Amz-Expires=300&X-Amz-Signature=75c8b7a53bf5cc5f4ad066f33f39b9c8f1204557b3031327511da09827eaaa33&X-Amz-SignedHeaders=host)
+👉 **[Voir la vidéo de démonstration (demo.webm)](assets/demo.webm)**
 
-
+*(Cliquez sur le lien ci-dessus puis sur "Download" ou "View Raw" si la lecture ne démarre pas directement).*
 ---
 
 ## ✅ Fonctionnalités Implémentées
