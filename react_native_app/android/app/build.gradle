@@ -2,7 +2,7 @@ apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
-evaluationDependsOn(':flutter')
+evaluationDependsOn(":flutter")
 
 /**
  * This is the configuration block to customize your React Native Android app.

@@ -6,11 +6,15 @@ buildscript {
         targetSdkVersion = 34
         ndkVersion = "26.1.10909125"
         kotlinVersion = "1.9.24"
+        
+        // Variables pour aider les plugins Flutter (path_provider)
+        flutterCompileSdkVersion = 35
+        flutterMinSdkVersion = 24
+        flutterTargetSdkVersion = 34
     }
     repositories {
         google()
         mavenCentral()
-        // On garde ça, c'est toujours utile
         maven { url 'https://storage.googleapis.com/download.flutter.io' }
     }
     dependencies {

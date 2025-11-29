@@ -117,7 +117,25 @@ Cette application sert de conteneur ("Host") pour le test. Elle gère la navigat
     ```
 
 ---
-*(À suivre : Intégration Native & Communication React Native <-> Flutter)*
+
+## 🌉 Partie 3 : Le Pont Natif (Native Bridge)
+
+Pour permettre à React Native de lancer le moteur Flutter, un module natif personnalisé a été développé en Java (intégré au projet Kotlin par défaut).
+
+### 🛠 Architecture du Module
+* **`FlutterModule.java`** : Étend `ReactContextBaseJavaModule`.
+    * Expose la méthode `@ReactMethod openProfile(String userId)`.
+    * Initialise le moteur Flutter (`FlutterEngine`) et le met en cache pour des performances optimales (Warm-up).
+    * Lance l'`Activity` Flutter par-dessus l'application React Native.
+* **`FlutterPackage.java`** : Enregistre le module auprès du pont React Native.
+* **`MainApplication.kt`** : Ajoute le package à la liste des modules chargés au démarrage.
+
+### 🔄 Flux de Données
+1. **React Native (TS)** : L'utilisateur clique sur le bouton "Ouvrir Profil".
+2. **Bridge (Java)** : La méthode `openProfile` est appelée avec l'ID utilisateur.
+3. **Flutter (Dart)** : L'activité Flutter se lance et récupère le contexte.
+
+---
 
 ## 🐛 Problèmes rencontrés et Solutions (Troubleshooting)
 

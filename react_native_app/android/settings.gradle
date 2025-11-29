@@ -3,7 +3,7 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
-        // Indispensable pour que le script trouve ses dépendances
+        // Indispensable pour trouver le plugin Flutter 1.0.0
         maven { url 'https://storage.googleapis.com/download.flutter.io' }
     }
     includeBuild("../node_modules/@react-native/gradle-plugin")
@@ -14,19 +14,61 @@ extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autoli
 
 rootProject.name = 'rn_host_app'
 
-// =========================================================
-// 🟢 CONFIGURATION FLUTTER (OFFICIELLE & CORRIGÉE)
-// =========================================================
+// Chemin vers le module Flutter
+def flutterModulePath = '../../flutter_profile_sdk'
+def localPropertiesFile = new File(settingsDir, flutterModulePath + '/.android/local.properties')
+def flutterSdkPath = null
 
-// 1. On définit le chemin
-def flutterProjectDir = new File(settingsDir, '../../flutter_profile_sdk')
+// On récupère le chemin du SDK Flutter
+if (localPropertiesFile.exists()) {
+    def properties = new Properties()
+    localPropertiesFile.withInputStream { properties.load(it) }
+    flutterSdkPath = properties.getProperty('flutter.sdk')
+} 
 
-// 2. LE FIX : On utilise le nom complet de la classe pour éviter l'erreur
-setBinding(new groovy.lang.Binding([gradle: this]))
+// On injecte le moteur de build Flutter si trouvé
+if (flutterSdkPath != null) {
+    includeBuild(new File(flutterSdkPath, "packages/flutter_tools/gradle"))
+}
 
-// 3. On lance le script officiel (qui va gérer les plugins tout seul !)
-evaluate(new File(flutterProjectDir, '.android/include_flutter.groovy'))
+// Modules Flutter
+include ':flutter'
+project(':flutter').projectDir = new File(settingsDir, flutterModulePath + '/.android/Flutter')
 
-// React Native
+// Modules Flutter additionnels (plugins)
+def dependenciesFile = new File(settingsDir, flutterModulePath + '/.flutter-plugins-dependencies')
+
+if (dependenciesFile.exists()) {
+    // On lit le fichier comme du texte brut pour éviter les bugs d'import
+    def text = dependenciesFile.text
+    // On extrait la section "android" à la main
+    def androidIndex = text.indexOf('"android":')
+    if (androidIndex != -1) {
+        def endBracket = text.indexOf(']', androidIndex)
+        if (endBracket != -1) {
+            def androidSection = text.substring(androidIndex, endBracket)
+            // Regex pour trouver "name": "..." et "path": "..."
+            def matcher = (androidSection =~ /"name":\s*"([^"]+)",\s*"path":\s*"((?:\\\\|[^"])+)"/)
+            
+            matcher.each { match ->
+                def name = match[1]
+                // Correction des slashs Windows
+                def path = match[2].replace('\\\\', '\\')
+                
+                def pluginDir = new File(path)
+                // On inclut le plugin seulement s'il a un module Android
+                if (new File(pluginDir, 'android').exists()) {
+                    include ":$name"
+                    project(":$name").projectDir = new File(pluginDir, 'android')
+                }
+            }
+        }
+    }
+}
+
+// SQFLite
+include ':sqflite_android'
+project(':sqflite_android').projectDir = new File('C:/Users/Administrateur/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_android-2.4.2+2/android')
+// Regarde les modules React Native
 include ':app'
 includeBuild('../node_modules/@react-native/gradle-plugin')
