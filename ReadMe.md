@@ -1,9 +1,34 @@
-# Flutter DSK by Azeoo
+# Flutter SDK by Azeoo
+
+> **Projet d'Alternance - Intégration Hybride React Native / Flutter**
 
 Ce dépôt contient la réalisation du test technique pour l'alternance Flutter chez Azeoo.
-Le projet est divisé en deux parties principales : un module Flutter (SDK) et une application hôte React Native.
+Il démontre l'intégration d'un module Flutter complet (SDK) au sein d'une application hôte React Native existante, avec communication bidirectionnelle via un pont natif Android (Java).
+
+---
+
+## 📹 Démonstration
+
+Une vidéo de démonstration du flux complet (Configuration ID -> Navigation -> Appel Module Natif -> Affichage Flutter) est disponible ci-dessous :
+
+[https://github.com/user-attachments/assets/dfee4cec-3453-42df-9936-e97a96108453-42df-9936-e97a9610840c](https://github.com/user-attachments/assets/dfee4cec-3453-42df-9936-e97a96108453-42df-9936-e97a9610840c)
+
+---
+
+## ✅ Fonctionnalités Implémentées
+
+| Critère | État | Détails |
+| :--- | :---: | :--- |
+| **SDK Flutter** | ✅ | Récupération API, Modèles de données, Gestion d'état, UI soignée. |
+| **React Native** | ✅ | Navigation par Onglets (Tabs), Persistance locale (AsyncStorage). |
+| **Intégration** | ✅ | Flutter intégré en tant que module (Add-to-App) dans le projet Android. |
+| **Pont Natif** | ✅ | Module Java personnalisé (`FlutterModule`) pour lancer le moteur. |
+| **Communication** | ✅ | Passage dynamique de l'`userId` de JS vers Dart via `MethodChannel`. |
+
+---
 
 ## 📂 Structure du Projet
+
 ```text
 /C:/Azeoo/
   ├── flutter_profile_sdk/   # Le module Flutter (Gestion du profil)
@@ -137,69 +162,29 @@ Pour permettre à React Native de lancer le moteur Flutter, un module natif pers
 
 ---
 
-## 🐛 Problèmes rencontrés et Solutions (Troubleshooting)
+## ⚔️ Challenges Techniques & Résolutions
 
-### 1. Erreur de stockage sur l'émulateur Android
-**Problème :** Erreur `[INSTALL_FAILED_INSUFFICIENT_STORAGE...]`.
-**Solution :** Utilisation de la fonction "Wipe Data" dans le *Device Manager* d'Android Studio.
-
-### 2. Erreur Gradle "Could not move temporary workspace" (Windows)
-**Problème :** Erreur `java.io.UncheckedIOException...`.
-**Solution :** Suppression manuelle du dossier caché `.gradle` et redémarrage pour libérer les fichiers verrouillés.
-
-### 3. Erreur NDK "Missing source.properties"
-**Problème :** Erreur `[CXX1101] NDK at ... did not have a source.properties file`.
-**Solution :** Réinstallation manuelle de la version spécifique du NDK (26.1.10909125) via Android Studio.
-
-### 4. Conflit de version Kotlin (Insets != EdgeInsets)
-**Problème :** Erreur de compilation dans `react-native-screens`.
-**Solution :** Forçage de la version `react-native-screens: ^3.35.0` et nettoyage complet (`npm install` propre).
-
-### 5. Problème de réseau Gradle (Hôte inconnu)
-**Problème :** Gradle n'arrive pas à télécharger les dépendances (`Hôte inconnu repo.maven.apache.org`).
-**Solution :** Flush du DNS Windows via `ipconfig /flushdns`.
-**Problème :** Lors du lancement du module Flutter (`flutter run`), échec de l'installation avec l'erreur :
-`[INSTALL_FAILED_INSUFFICIENT_STORAGE: Failed to override installation location]`
-
-**Cause :** L'espace disque alloué par défaut à l'émulateur Android était saturé par les installations précédentes ou les fichiers temporaires.
-
-**Solution :**
-* Arrêt de l'émulateur.
-* Utilisation de la fonction **"Wipe Data"** dans le *Device Manager* d'Android Studio pour réinitialiser l'émulateur à son état d'usine.
-* Relance de l'installation.
-## 🔧 Challenges Techniques Surmontés (Intégration Windows/Gradle)
-
-L'intégration d'un module Flutter (Add-to-App) dans un projet React Native 0.76 sous Windows a présenté plusieurs défis complexes liés à l'écosystème Gradle et au verrouillage de fichiers. Voici les solutions techniques mises en place :
+Ce projet a nécessité une configuration avancée pour faire cohabiter React Native 0.76 et Flutter sous Windows.
 
 ### 1. Conflit de Cycle de Vie Gradle (`afterEvaluate`)
-* **Symptôme :** Erreur `Cannot run Project.afterEvaluate(Action) when the project is already evaluated`.
-* **Cause :** Les optimisations de React Native 0.76 ("Configure on Demand") verrouillent le projet avant que le plugin Flutter n'ait pu s'initialiser.
-* **Solution :** Désactivation explicite des caches et du parallélisme dans `gradle.properties` :
-    ```properties
-    org.gradle.configureondemand=false
-    org.gradle.configuration-cache=false
-    org.gradle.parallel=false
-    ```
+* **Problème :** Erreur `Cannot run Project.afterEvaluate...` lors du build.
+* **Cause :** Les optimisations de React Native 0.76 ("Configure on Demand") verrouillaient le projet avant l'initialisation du plugin Flutter.
+* **Solution :** Désactivation explicite des caches et du parallélisme dans `gradle.properties` et réorganisation de l'ordre d'évaluation dans `settings.gradle`.
 
-### 2. Incompatibilité de Script Groovy (`Binding`)
-* **Symptôme :** Erreur `unable to resolve class Binding` dans `settings.gradle`.
-* **Cause :** Le script d'intégration automatique de Flutter utilise une syntaxe Groovy implicite que les versions récentes de Gradle ne supportent plus dans ce contexte.
-* **Solution :** Utilisation du nom de classe complet qualifié :
-    ```gradle
-    // Au lieu de setBinding(new Binding(...))
-    setBinding(new groovy.lang.Binding([gradle: this]))
-    ```
+### 2. Incompatibilité de Script Groovy
+* **Problème :** Erreur `unable to resolve class Binding` avec le script d'intégration standard.
+* **Solution :** Utilisation du nom de classe complet qualifié `groovy.lang.Binding` et inclusion manuelle du dépôt Maven de Flutter.
 
 ### 3. Verrouillage de Fichiers Windows (`UncheckedIOException`)
-* **Symptôme :** Erreur `Could not move temporary workspace` lors du build.
-* **Cause :** Le système de fichiers Windows, couplé à l'antivirus ou à l'indexation, verrouille les dossiers temporaires `.gradle` pendant la compilation.
-* **Solution :**
-    * Exclusion du dossier du projet dans Windows Defender.
-    * Script de nettoyage manuel des processus `OpenJDK` et `GradleDaemon` avant les builds critiques.
+* **Problème :** Erreur `Could not move temporary workspace` due aux verrous posés par l'OS/Antivirus sur les dossiers temporaires `.gradle`.
+* **Solution :** Scripts de nettoyage des processus Java ("Zombies") et exclusions Windows Defender.
 
 ### 4. Gestion des Plugins Flutter (`Package not found`)
-* **Symptôme :** Le code Java généré (`GeneratedPluginRegistrant`) ne trouvait pas les modules `sqflite` ou `path_provider`.
-* **Cause :** L'intégration manuelle initiale omettait l'inclusion dynamique des plugins dépendants.
-* **Solution :** Retour à l'utilisation du script officiel `include_flutter.groovy` (une fois patché avec le fix `groovy.lang.Binding`), qui gère automatiquement la résolution des plugins via le fichier `.flutter-plugins-dependencies`.
+* **Problème :** Le code natif généré ne trouvait pas les modules dépendants (`sqflite`, `path_provider`) car le format JSON des plugins Flutter récents n'était pas lu par défaut.
+* **Solution :** Implémentation d'un script `settings.gradle` personnalisé utilisant une Regex robuste pour parser `.flutter-plugins-dependencies` et inclure les modules natifs dynamiquement.
 
----
+### 5. Erreurs d'Environnement (NDK & Kotlin)
+* **Problème :** Conflits de versions NDK et erreurs `Insets` dans `react-native-screens`.
+* **Solution :** Forçage de la version `react-native-screens: ^3.35.0` et réinstallation propre du NDK 26.1.10909125.
+
+--- 
