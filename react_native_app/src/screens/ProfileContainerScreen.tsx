@@ -27,8 +27,7 @@ export default function ProfileContainerScreen() {
     }
 
     try {
-      console.log(`Tentative d'ouverture de Flutter pour ID: ${currentId}`);
-      // C'est ICI que React Native parle à Java !
+      // On appelle la méthode du module natif
       FlutterModule.openProfile(currentId);
     } catch (e) {
       console.error(e);

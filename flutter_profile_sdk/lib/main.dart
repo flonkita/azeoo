@@ -22,9 +22,9 @@ class MyApp extends StatelessWidget {
       title: 'Azeoo SDK Profile',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
-      // POUR LE TEST: On hardcode l'ID '1' ici.
-      // Plus tard, on récupérera ça dynamiquement.
-      home: const ProfileScreen(userId: '1'),
+
+      // 👇 SUPPRIME LE PARAMÈTRE userId: '1'
+      home: const ProfileScreen(),
     );
   }
 }
