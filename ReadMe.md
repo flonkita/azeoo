@@ -11,7 +11,7 @@ Il démontre l'intégration d'un module Flutter complet (SDK) au sein d'une appl
 
 Une vidéo de démonstration du flux complet (Configuration ID -> Navigation -> Appel Module Natif -> Affichage Flutter) est disponible ci-dessous :
 
-[https://github.com/user-attachments/assets/dfee4cec-3453-42df-9936-e97a96108453-42df-9936-e97a9610840c](https://github.com/user-attachments/assets/dfee4cec-3453-42df-9936-e97a96108453-42df-9936-e97a9610840c)
+https://github.com/user-attachments/assets/dfee4cec-3453-42df-9936-e97a9610840c
 
 ---
 
